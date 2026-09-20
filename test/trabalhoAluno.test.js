@@ -57,10 +57,6 @@ describe('Entrega de trabalho do aluno', () => {
         titulo: 'Lista de Exercícios 2',
         descricao: 'Resolução dos exercícios'
       });
-
-    console.log('STATUS:', resposta.status);
-    console.log('BODY:', resposta.body);
-
     expect(resposta.status).to.equal(201);
   });
 

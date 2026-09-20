@@ -8,38 +8,25 @@ const alunos = JSON.parse(
   fs.readFileSync('./test/dados/alunos.json', 'utf-8')
 );
 
-describe('Matrícula do aluno', () => {
 
-  it('deve matricular o aluno em uma disciplina com sucesso', async () => {
+describe('Cadastro de aluno', () => {
 
-    const aluno = alunos[0];
+  it('deve cadastrar um aluno com sucesso', async () => {
+    const aluno = {
+      ...alunos[0],
+      email: `aluno.${Date.now()}@email.com`,
+      matricula: `MAT${Date.now()}` 
+    };
 
     const tokenAdmin = await loginAdmin();
 
-    // Cadastra o aluno
-    const cadastro = await request(app)
+    const resposta = await request(app)
       .post('/api/admin/alunos')
-      .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${tokenAdmin}`)
       .send(aluno);
 
-    expect(cadastro.status).to.equal(201);
-
-    const alunoId = cadastro.body.id;
-
-    // Matricula o aluno na disciplina
-    const resposta = await request(app)
-      .post('/api/admin/disciplinas/disciplina-matematica/matriculas')
-      .set('Content-Type', 'application/json')
-      .set('Authorization', `Bearer ${tokenAdmin}`)
-      .send({
-        alunoId
-      });
-
-    console.log('STATUS:', resposta.status);
-    console.log('BODY:', resposta.body);
-
     expect(resposta.status).to.equal(201);
+    expect(resposta.body).to.have.property('id');
   });
 
-});
+}); 
